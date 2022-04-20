@@ -39,8 +39,8 @@ public class UsersService {
     public ResponseDTO<UsersDTO> adduser(UsersDTO usersDTO) {
         try{
             Users users = UsersMapping.toEntity(usersDTO);
-            users.setId(null);
             usersRepository.save(users);
+            UsersMapping.setEntity(users,usersDTO);
             return new ResponseDTO<>(true,0,"OK", UsersMapping.toDTO(users));
         }catch (Exception e){
             e.printStackTrace();
@@ -49,18 +49,19 @@ public class UsersService {
     }
 
     public ResponseDTO<UsersDTO> update(UsersDTO usersDTO) {
-        try{
-            Users users = UsersMapping.toEntity(usersDTO);
-            usersRepository.save(users);
-            UsersMapping.setEntity(users,usersDTO);
-            return new ResponseDTO<>(true, 0, "OK",usersDTO);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseDTO<>(false, -1, "ERROR IN SAVING!",null);
-        }
+        return adduser(usersDTO);
     }
 
     public ResponseDTO<UsersDTO> delete(UsersDTO usersDTO){
-        return null;
+        Optional<Users> users = usersRepository.findById(usersDTO.getId());
+        Users user = users.get();
+        UsersMapping.setEntity(user,usersDTO);
+        try{
+            usersRepository.delete(user);
+            return new ResponseDTO<>(true, 0, "OK",usersDTO);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseDTO<>(false,-1,"ERROR IN DELETE", null);
+        }
     }
 }
