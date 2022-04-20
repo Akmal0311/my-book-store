@@ -2,6 +2,8 @@ package uz.yt.springdata.dto;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,11 +13,18 @@ public class BookDTO {
 
     private String name;
 
-    private String author;
-
     private Double cost;
 
+    private Date published_date;
+
+    private Integer pageCount;
+
+    private AuthorDTO author;
+
     private String genre;
+
+    private PublisherDTO publisher;
+
 
 
     public String toString() {

@@ -2,6 +2,7 @@ package uz.yt.springdata.dao;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uz.yt.springdata.dto.AuthorDTO;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,11 +40,12 @@ public class Book {
     private Integer publisherId;
 
 
-    public Book(Integer id, String nameUz, Double cost, Integer authorId, String genre) {
+    public Book(Integer id, String nameUz, Double cost, Date publishedDate, Integer pageCount, String genre) {
         this.id = id;
         this.nameUz = nameUz;
         this.cost = cost;
-        this.authorId = authorId;
+        this.publishedDate = publishedDate;
+        this.pageCount = pageCount;
         this.genre = genre;
     }
 }

@@ -1,9 +1,6 @@
 package uz.yt.springdata.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.yt.springdata.dao.Book;
 import uz.yt.springdata.dto.BookDTO;
@@ -33,15 +30,13 @@ public class BookService {
         }
     }
 
-    public ResponseDTO<List<BookDTO>> getAllBooks(Integer size, Integer page){
-        PageRequest pageable = PageRequest.of(page,size);
-        Page<Book> books = bookRepository.findAll(pageable);
-        if(!books.isEmpty()) {
+    public ResponseDTO<List<BookDTO>> getAllBooks(){
+        List<Book> books = bookRepository.findAll();
+        if(!books.isEmpty()){
             List<BookDTO> response = new ArrayList<>();
-            for (Book book : books) {
+            for(Book book : books){
                 response.add(BookMapping.toDTO(book));
             }
-            Page<BookDTO> result = new PageImpl(response, books.getPageable(),books.getTotalElements());
             return new ResponseDTO<>(true, 0, "OK", response);
         }
         return new ResponseDTO<>(false, -1, "ERROR",null);
@@ -69,5 +64,17 @@ public class BookService {
             return  new ResponseDTO<>(false, -1, e.getMessage(),null);
         }
 
+    }
+
+    public ResponseDTO<BookDTO> delete(BookDTO bookDTO) {
+
+        Optional<Book> dbook = bookRepository.findById(bookDTO.getId());
+        if(!dbook.isPresent()){
+            return new ResponseDTO<>(false, -1,"Bunday ID da kitob yo'q!",bookDTO);
+        }
+        Book book = dbook.get();
+
+        bookRepository.delete(book);
+        return new ResponseDTO<>(true,0,"Kitob malumotlari o'chirildi!",bookDTO);
     }
 }
